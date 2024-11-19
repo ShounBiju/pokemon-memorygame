@@ -1,17 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './ButtonStyle.css';  // Import your CSS file
 
-const ButtonStyle = () => {
-  const [isClicked, setIsClicked] = useState(false);
-
-  const handleClick = () => {
-    setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 300);  // Reset animation after 300ms
-  };
-
+// Accept the onClick prop here
+const ButtonStyle = ({ onClick }) => {
   return (
-    <button className="button" onClick={handleClick}>
-      <div className={`loader ${isClicked ? 'isClicked' : ''}`} />
+    <button className="button" onClick={onClick}>  {/* Pass it to the button element */}
+      <div className="loader" />
     </button>
   );
 };
