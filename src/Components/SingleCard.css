@@ -25,7 +25,7 @@
 
 .card .back {
     transition: all ease-in 0.2s;
-    transition-delay: 0.4s;
+    transition-delay: 0.2s;
 }
 
 .flipped .back {

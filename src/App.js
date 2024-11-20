@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import PokemonLogo from './Assets/PokemonLogo.png';
 import ButtonStyle from './Components/ButtonStyle';
 import SingleCard from './Components/SingleCard';
+import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa'; 
 
 const cardImages = [
   { "src": "/img/jigglypuf-1.jpg", matched: false },
@@ -14,86 +15,102 @@ const cardImages = [
 ];
 
 function App() {
-  const [cards, setCards] =useState([])
-  const [turns, setTurns] = useState(0)
-  const [choiceOne, setChoiceOne] = useState(null)
-  const [choiceTwo, setChoiceTwo] = useState(null)
-  const [disabled, setDisabled] = useState(false)
-  //shuffle cards
+  const [cards, setCards] = useState([]);
+  const [turns, setTurns] = useState(0);
+  const [choiceOne, setChoiceOne] = useState(null);
+  const [choiceTwo, setChoiceTwo] = useState(null);
+  const [disabled, setDisabled] = useState(false);
+  const audioRef = useRef(null);  // Create a ref for the audio element
+  const [isPlaying, setIsPlaying] = useState(true);  // Track if music is playing
+
+  // Shuffle cards
   const shuffleCards = () => {
-    const shuffledCards = [ ...cardImages, ...cardImages]
+    const shuffledCards = [...cardImages, ...cardImages]
       .sort(() => Math.random() - 0.5)
-      .map((card) => ({ ...card, id: Math.random() }))
-      
-    setChoiceOne(null)
-    setChoiceTwo(null)
-    setCards(shuffledCards)
-    setTurns(0)
+      .map((card) => ({ ...card, id: Math.random() }));
+
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setCards(shuffledCards);
+    setTurns(0);
   };
-  //handle a choice
+
+  // Handle a choice
   const handleChoice = (card) => {
-    choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
+    choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
+  };
 
-  }
-
-
-  //compare 2 selected cards
+  // Compare 2 selected cards
   useEffect(() => {
-    
-
     if (choiceOne && choiceTwo) {
-      setDisabled(true)
+      setDisabled(true);
 
       if (choiceOne.src === choiceTwo.src) {
-        setCards(prevCards => {
-          return prevCards.map(card => {
+        setCards((prevCards) => {
+          return prevCards.map((card) => {
             if (card.src === choiceOne.src) {
-              return {...card, matched: true}
+              return { ...card, matched: true };
             } else {
-              return card
+              return card;
             }
-          })
-        })
-        resetTurn()
+          });
+        });
+        resetTurn();
       } else {
-        setTimeout(() => resetTurn(), 1000)
+        setTimeout(() => resetTurn(), 1000);
       }
     }
-  },[choiceOne, choiceTwo])
+  }, [choiceOne, choiceTwo]);
 
-  console.log(cards)
-
-  //reset choises and increase turn
+  // Reset choices and increase turns
   const resetTurn = () => {
-    setChoiceOne(null)
-    setChoiceTwo(null)
-    setTurns(prevTurns => prevTurns + 1)
-    setDisabled(false)
-  }
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setTurns((prevTurns) => prevTurns + 1);
+    setDisabled(false);
+  };
 
-  //start game automatically
+  // Start the game automatically
   useEffect(() => {
-    shuffleCards()
-  }, [])
+    shuffleCards();
+  }, []);
+
+  // Play or Pause background music
+  const toggleMusic = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
 
   return (
     <div className="App">
-      <img
-        src={PokemonLogo}
-        alt="Pokemon Logo"
-        className="logo"
-      />
+      {/* Background Music */}
+      <audio ref={audioRef} loop>
+        <source src="/music/pokemon-bgm.mp3" type="audio/mp3" />
+        Your browser does not support the audio element.
+      </audio>
+
+      <img src={PokemonLogo} alt="Pokemon Logo" className="logo" />
+
       <div className="button-container">
         <ButtonStyle onClick={shuffleCards} />
         <p className="play-text">Play Game</p>
       </div>
 
-      <div className='card-grid'>
-        {cards.map(card => (
-          <SingleCard 
-            key={card.id} 
-            card={card} 
-            handleChoice={handleChoice} 
+      {/* Volume Icon */}
+      <div className="volume-icon" onClick={toggleMusic}>
+        {isPlaying ? <FaVolumeUp /> : <FaVolumeMute />}
+      </div>
+
+      <div className="card-grid">
+        {cards.map((card) => (
+          <SingleCard
+            key={card.id}
+            card={card}
+            handleChoice={handleChoice}
             flipped={card === choiceOne || card === choiceTwo || card.matched}
             disabled={disabled}
           />

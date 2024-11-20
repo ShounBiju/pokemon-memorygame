@@ -1,6 +1,6 @@
 .loader {
-    height: 120px; /* Increased size */
-    width: 120px; /* Increased size */
+    height: 120px; 
+    width: 120px;
     position: relative;
     background: rgba(221, 193, 51, 0);
     display: inline-block;
@@ -18,8 +18,8 @@
   .loader::after {
     background: radial-gradient(at 75% 15%, #fffb, #0000 35%),
       radial-gradient(at 80% 40%, #0000, #0008),
-      radial-gradient(circle 10px, #fff 94%, #0000), /* Adjusted circle size */
-      radial-gradient(circle 20px, #000 94%, #0000), /* Adjusted circle size */
+      radial-gradient(circle 10px, #fff 94%, #0000), 
+      radial-gradient(circle 20px, #000 94%, #0000), 
       linear-gradient(#F93318 0 0) top / 100% calc(50% - 10px),
       linear-gradient(#fff 0 0) bottom / 100% calc(50% - 10px) #000;
     background-repeat: no-repeat;
@@ -28,8 +28,8 @@
   
   .loader::before {
     background: #ddddddfd;
-    filter: blur(12px); /* Slightly increased blur */
-    transform: scaleY(0.4) translate(-26px, 0px); /* Adjusted scale and translation */
+    filter: blur(12px); 
+    transform: scaleY(0.4) translate(-26px, 0px); 
   }
   
   @keyframes l20 {
